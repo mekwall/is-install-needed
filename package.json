@@ -22,6 +22,7 @@
     "@types/jest": "^23.3.5",
     "@types/yargs": "^12.0.1",
     "jest": "^23.6.0",
+    "jest-junit": "^5.2.0",
     "prettier": "^1.14.3",
     "semantic-release": "^15.9.17",
     "ts-jest": "^23.10.4",
@@ -32,9 +33,14 @@
   "scripts": {
     "build": "tsc --skipLibCheck --declaration -p tsconfig.json",
     "test": "jest --runInBand",
-    "coverage": "jest --coverage --runInBand"
+    "coverage": "jest --coverage --runInBand",
+    "release": "semantic-release"
   },
   "jest": {
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
     "moduleFileExtensions": [
       "ts",
       "js"
