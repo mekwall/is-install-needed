@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "lib": ["es2017", "esnext.asynciterable"],
+    "target": "ES3",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "downlevelIteration": true,
+    "importHelpers": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "outDir": "lib"
+  },
+  "include": ["src", "tests", "yarn-api.d.ts"],
+  "exclude": ["node_modules"]
+}
