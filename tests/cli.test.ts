@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import { YarnAPI } from './utils/YarnAPI';
 import { TEST_PACKAGE_DIR, CHECK_FILE } from './constants';
-import { NpmAPI } from './utils/npmAPI';
+import { NpmAPI } from './utils/NpmAPI';
 import { run } from '../src/cli';
 
 const yarn = new YarnAPI(TEST_PACKAGE_DIR);

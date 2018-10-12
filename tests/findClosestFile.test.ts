@@ -1,7 +1,7 @@
 import { findClosestFile } from '../src/findClosestFile';
 import { TEST_PACKAGE_DIR, YARN_LOCK_FILE, NPM_LOCK_FILE } from './constants';
 import { YarnAPI } from './utils/YarnAPI';
-import { NpmAPI } from './utils/npmAPI';
+import { NpmAPI } from './utils/NpmAPI';
 import { __await } from 'tslib';
 
 const yarn = new YarnAPI(TEST_PACKAGE_DIR);
