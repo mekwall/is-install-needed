@@ -12,3 +12,4 @@ node_modules/
 coverage/
 .lockhash
 *.tgz
+junit.xml
