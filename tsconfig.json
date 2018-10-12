@@ -14,6 +14,6 @@
     "strictPropertyInitialization": true,
     "outDir": "lib"
   },
-  "include": ["src", "tests", "yarn-api.d.ts"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }
