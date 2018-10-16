@@ -14,6 +14,7 @@ describe('writeCheckFile', () => {
   afterAll(async (done) => {
     await yarn.rmlockfile();
     await yarn.rmmods();
+    fs.removeSync(CHECK_FILE);
     done();
   });
 

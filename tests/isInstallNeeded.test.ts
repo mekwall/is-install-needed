@@ -42,7 +42,7 @@ describe('isInstallNeeded', () => {
       await yarn.remove(['smallest']);
       expect(result).toBe(true);
       done();
-    }, 200);
+    }, 1000);
   });
 
   it("should say needed because node_modules doesn't exist", async () => {
