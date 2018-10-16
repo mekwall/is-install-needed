@@ -28,7 +28,7 @@ describe('writeCheckFile', () => {
 
   it('should fail to write check file', async () => {
     expect.assertions(1);
-    const result = await writeCheckFile(YARN_LOCK_FILE, '/dev/null');
+    const result = await writeCheckFile(YARN_LOCK_FILE, '/dev/nope');
     expect(result).toBe(false);
   });
 });
