@@ -6,7 +6,7 @@ import { writeCheckFile } from './writeCheckFile';
 
 async function findLockfile(args?: string[]) {
   const argv = args ? yargs.parse(args) : yargs.argv;
-  const cwd = argv.cwd || process.cwd;
+  const cwd = argv.cwd || process.cwd();
 
   const yarnLockfile = path.join(cwd, 'yarn.lock');
   const npmLockfile = path.join(cwd, 'package-lock.json');
