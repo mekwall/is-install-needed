@@ -21,10 +21,15 @@ async function findLockfile(args?: string[]) {
 
   const result = await Promise.all([
     findClosestFile(path.basename(yarnLockfile), cwd),
-    findClosestFile(path.basename(yarnLockfile), cwd),
+    findClosestFile(path.basename(npmLockfile), cwd),
   ]);
   let lockfile = null;
-  if (result[0]) {
+  if (result[0] && result[1]) {
+    lockfile =
+      result[0].split(path.sep).length >= result[1].split(path.sep).length
+        ? result[0]
+        : result[1];
+  } else if (result[0]) {
     lockfile = result[0];
   } else if (result[1]) {
     lockfile = result[1];
