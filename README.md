@@ -1,5 +1,7 @@
 # is-install-needed
 
+[![Build Status](https://img.shields.io/circleci/project/mekwall/is-install-needed.svg)](https://circleci.com/gh/mekwall/is-install-needed)
+
 This is a simple tool that checks if the lock file has changed (supports both Yarn and npm) so you know if you need to run install.
 
 ## Installation
