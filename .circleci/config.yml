@@ -20,6 +20,10 @@ jobs:
             - v1-dependencies-
 
       - run:
+          name: Install pnpm
+          command: npm i -g pnpm
+
+      - run:
           name: Install dependencies
           command: yarn install
 
