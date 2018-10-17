@@ -17,7 +17,7 @@ export class NpmAPI {
 
   private exec(cmd: string, options: Options) {
     if (this.proc) {
-      return Promise.reject(new Error('Yarn is already running'));
+      return Promise.reject(new Error('npm is already running'));
     }
     return new Promise((resolve, reject) => {
       let args = [cmd];
