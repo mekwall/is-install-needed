@@ -7,13 +7,16 @@ import {
   CHECK_FILE,
   YARN_LOCK_FILE,
   NPM_LOCK_FILE,
+  PNPM_LOCK_FILE,
 } from './constants';
 import { NpmAPI } from './utils/NpmAPI';
-import { run } from '../src/cli';
+import { PnpmAPI } from './utils/PnpmAPI';
+import { run } from '../src/cliFunctions';
 import { writeCheckFile } from '../src/writeCheckFile';
 
 const yarn = new YarnAPI(TEST_PACKAGE_DIR);
 const npm = new NpmAPI(TEST_PACKAGE_DIR);
+const pnpm = new PnpmAPI(TEST_PACKAGE_DIR);
 
 describe('cli', () => {
   beforeAll(() => {
@@ -42,6 +45,15 @@ describe('cli', () => {
     expect(result.msg).toBe('Install is not needed');
   });
 
+  it('should automatically detect shrinkwrap.yaml', async () => {
+    await pnpm.install();
+    await writeCheckFile(PNPM_LOCK_FILE, CHECK_FILE);
+    const result = await run(['--cwd', TEST_PACKAGE_DIR]);
+    await pnpm.rmlockfile();
+    await pnpm.rmmods();
+    expect(result.msg).toBe('Install is not needed');
+  });
+
   it('should fail to detect yarn.lock', async (done) => {
     const TMP_DIR = path.join(os.tmpdir(), 'test-package');
     await yarn.rmlockfile();
@@ -60,6 +72,18 @@ describe('cli', () => {
     fs.moveSync(TEST_PACKAGE_DIR, TMP_DIR);
     setTimeout(async () => {
       const result = await run(['--npm', '--cwd', TMP_DIR]);
+      fs.moveSync(TMP_DIR, TEST_PACKAGE_DIR);
+      expect(result.msg).toBe('No lock file were found');
+      done();
+    }, 1000);
+  });
+
+  it('should fail to detect shrinkwrap.yaml', async (done) => {
+    const TMP_DIR = path.join(os.tmpdir(), 'test-package');
+    await npm.rmlockfile();
+    fs.moveSync(TEST_PACKAGE_DIR, TMP_DIR);
+    setTimeout(async () => {
+      const result = await run(['--pnpm', '--cwd', TMP_DIR]);
       fs.moveSync(TMP_DIR, TEST_PACKAGE_DIR);
       expect(result.msg).toBe('No lock file were found');
       done();
