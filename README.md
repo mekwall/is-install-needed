@@ -4,21 +4,11 @@
 [![Build Status](https://img.shields.io/circleci/project/github/mekwall/is-install-needed.svg?style=flat-square)](https://circleci.com/gh/mekwall/is-install-needed)
 [![Dependencies](https://img.shields.io/librariesio/github/mekwall/is-install-needed.svg?style=flat-square)](https://github.com/mekwall/is-install-needed)
 
-This is a simple tool that checks if the lock file has changed (supports both Yarn and npm) so you know if you need to run install.
+This is a simple tool that checks if the lock file has changed (supports Yarn, npm and pnpm) so you know if you need to run install.
 
 ## Installation
 
-### npm
-
-```bash
-$ npm install -g is-install-needed
-```
-
-### yarn
-
-```bash
-$ yarn global add is-install-needed
-```
+Install globally with `npm`, `yarn` or `pnpm` if you want to use the cli, or locally if you only want to use it programatically.
 
 ## Usage
 
@@ -28,12 +18,13 @@ $ yarn global add is-install-needed
 $ is-install-needed
 ```
 
-By default it looks for both yarn.lock and package-lock.json.
+By default it will automatically look for yarn.lock, package-lock.json and shrinkwrap.yaml.
 
 | Flag     | Description                     |
 | -------- | ------------------------------- |
 | `--yarn` | Only look for yarn.lock         |
 | `--npm`  | Only look for package-lock.json |
+| `--pnpm` | Only look for shrinkwrap.yaml   |
 
 ### Programmatic API
 
