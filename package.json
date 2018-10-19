@@ -1,7 +1,7 @@
 {
   "name": "is-install-needed",
   "description": "Tool to check if runnning npm/yarn install is necessary",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "Marcus Ekwall <marcus.ekwall@gmail.com>",
   "license": "ISC",
   "main": "./lib/index.js",
