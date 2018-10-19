@@ -8,7 +8,7 @@ export async function findClosestFile(
   filename: string,
   start?: string | string[],
   check?: typeof defaultCheck
-): Promise<string | null> {
+): Promise<string | undefined> {
   if (!module.parent) {
     throw Error('Module has no parent');
   }
@@ -23,13 +23,13 @@ export async function findClosestFile(
   }
 
   if (!start.length) {
-    return null;
+    return;
   }
 
   start.pop();
   const dir = start.join(path.sep);
   if (!dir) {
-    return null;
+    return;
   }
 
   try {

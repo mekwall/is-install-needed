@@ -5,11 +5,13 @@
 [![Coverage](https://img.shields.io/codecov/c/github/mekwall/is-install-needed/master.svg?style=flat-square)](https://codecov.io/github/mekwall/is-install-needed?branch=master)
 [![Dependencies](https://img.shields.io/librariesio/github/mekwall/is-install-needed.svg?style=flat-square)](https://github.com/mekwall/is-install-needed)
 
-This is a simple tool that checks if the lock file has changed (supports Yarn, npm and pnpm) so you know if you need to run install.
+A simple devtool that tells you if you need to run install or not. It does so by checking if the lock file of your preferred package manager has changed. Supports the most popular package managers out there: [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/) and [pnpm](https://pnpm.js.org/).
 
 ## Installation
 
-Install globally with `npm`, `yarn` or `pnpm` if you want to use the cli, or locally if you only want to use it programatically.
+Install the `is-install-needed` package with your preferred package manager.
+
+Add `is-install-needed --postinstall` to your postscript to automatically write a check file after install.
 
 ## Usage
 
@@ -19,23 +21,37 @@ Install globally with `npm`, `yarn` or `pnpm` if you want to use the cli, or loc
 $ is-install-needed
 ```
 
-By default it will automatically look for yarn.lock, package-lock.json and shrinkwrap.yaml.
+It will automatically look for yarn.lock, package-lock.json and shrinkwrap.yaml when no preferred package manager is provided.
 
-| Flag     | Description                     |
-| -------- | ------------------------------- |
-| `--yarn` | Only look for yarn.lock         |
-| `--npm`  | Only look for package-lock.json |
-| `--pnpm` | Only look for shrinkwrap.yaml   |
+| Flag            | Available options | Description               |
+| --------------- | ----------------- | ------------------------- |
+| `--prefer`      | npm, yarn or pnpm | Preferred package manager |
+| `--cwd`         | \<path>           | Current working directory |
+| `--postinstall` |                   | Postinstall script        |
 
 ### Programmatic API
+
+#### Check if install is needed
 
 ```javascript
 import { isInstallNeeded } from 'is-install-needed';
 
-async function check() {
-  const isNeeded = await isInstallNeeded('./yarn.lock', '.lockhash');
+async () => {
+  const isNeeded = await isInstallNeeded();
   if (result) {
-    // Install packages
+    console.error('You need to run install');
+    process.exit(1);
   }
-}
+};
+```
+
+#### Find closest lock file
+
+```javascript
+import { findClosestLockfile } from 'is-install-needed';
+
+async () => {
+  const lockfile = await findClosestLockfile();
+  console.log(lockfile); // > /path/to/package/.yarn.lock
+};
 ```

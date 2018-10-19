@@ -59,9 +59,9 @@ describe('cli', () => {
     await yarn.rmlockfile();
     fs.moveSync(TEST_PACKAGE_DIR, TMP_DIR);
     setTimeout(async () => {
-      const result = await run(['--yarn', '--cwd', TMP_DIR]);
+      const result = await run(['--prefer=yarn', '--cwd', TMP_DIR]);
       fs.moveSync(TMP_DIR, TEST_PACKAGE_DIR);
-      expect(result.msg).toBe('No lock file were found');
+      expect(result.msg).toBe('Lock file not found');
       done();
     }, 1000);
   });
@@ -71,9 +71,9 @@ describe('cli', () => {
     await npm.rmlockfile();
     fs.moveSync(TEST_PACKAGE_DIR, TMP_DIR);
     setTimeout(async () => {
-      const result = await run(['--npm', '--cwd', TMP_DIR]);
+      const result = await run(['--prefer=npm', '--cwd', TMP_DIR]);
       fs.moveSync(TMP_DIR, TEST_PACKAGE_DIR);
-      expect(result.msg).toBe('No lock file were found');
+      expect(result.msg).toBe('Lock file not found');
       done();
     }, 1000);
   });
@@ -83,9 +83,9 @@ describe('cli', () => {
     await npm.rmlockfile();
     fs.moveSync(TEST_PACKAGE_DIR, TMP_DIR);
     setTimeout(async () => {
-      const result = await run(['--pnpm', '--cwd', TMP_DIR]);
+      const result = await run(['--prefer=pnpm', '--cwd', TMP_DIR]);
       fs.moveSync(TMP_DIR, TEST_PACKAGE_DIR);
-      expect(result.msg).toBe('No lock file were found');
+      expect(result.msg).toBe('Lock file not found');
       done();
     }, 1000);
   });
