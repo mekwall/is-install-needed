@@ -11,12 +11,20 @@ function returnResult(code: number, msg?: string, silent = false) {
   if (msg && !silent) {
     console.log(msg);
   }
-  process.exit(code);
+  setImmediate(() => process.exit(code));
   return { code, msg };
 }
 
+const yag = yargs.options({
+  cwd: { type: "string", default: process.cwd() },
+  prefer: { type: "string" },
+  checkfile: { type: "string", default: ".lockhash" },
+  postinstall: { type: "boolean", default: false },
+  silent: { type: "boolean", default: false },
+});
+
 export async function run(args?: string[]) {
-  const argv = args ? yargs.parse(args) : yargs.argv;
+  const argv = args ? yag.parse(args) : yag.argv;
   const lockfile = await findClosestLockfile(argv.cwd, argv.prefer);
   const checkfilename = argv.checkfile || ".lockhash";
   if (lockfile) {

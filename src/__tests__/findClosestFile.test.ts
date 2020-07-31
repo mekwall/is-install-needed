@@ -1,4 +1,4 @@
-import { findClosestFile } from "../src/findClosestFile";
+import { findClosestFile } from "../findClosestFile";
 import {
   TEST_PACKAGE_DIR,
   YARN_LOCK_FILE,
@@ -33,10 +33,10 @@ describe("findClosestFile", () => {
     await npm.rmmods();
   });
 
-  it("should find shrinkwrap.yaml", async () => {
+  it("should find pnpm-lock.yaml", async () => {
     expect.assertions(1);
     await pnpm.install();
-    const result = await findClosestFile("shrinkwrap.yaml", TEST_PACKAGE_DIR);
+    const result = await findClosestFile("pnpm-lock.yaml", TEST_PACKAGE_DIR);
     expect(result).toBe(PNPM_LOCK_FILE);
     await pnpm.rmlockfile();
     await pnpm.rmmods();

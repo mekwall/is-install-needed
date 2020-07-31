@@ -3,6 +3,7 @@ import os from "os";
 import stream from "stream";
 import fs from "fs-extra";
 import path from "path";
+import { YARN_LOCK_FILE } from "../constants";
 
 interface Options {
   pkgs?: string[];
@@ -38,13 +39,13 @@ export class YarnAPI {
       );
 
       let totalData = "";
-      this.proc.stdout.on("data", (data) => {
+      this.proc.stdout?.on("data", (data) => {
         totalData += data.toString();
         this.stdout.write(data);
       });
 
       let totalErr = "";
-      this.proc.stderr.on("data", (data) => {
+      this.proc.stderr?.on("data", (data) => {
         totalErr += data;
         this.stderr.write(data);
       });
@@ -61,6 +62,9 @@ export class YarnAPI {
   }
 
   public install(extraArgs?: string[]) {
+    if (!fs.existsSync(YARN_LOCK_FILE)) {
+      fs.writeFileSync(YARN_LOCK_FILE, "");
+    }
     return this.exec("install", {
       extraArgs,
     });
@@ -79,7 +83,12 @@ export class YarnAPI {
 
   public async rmmods() {
     try {
-      await fs.remove(path.join(this.cwd, "node_modules"));
+      await Promise.all([
+        fs.remove(path.join(this.cwd, "node_modules")),
+        fs.remove(path.join(this.cwd, ".yarn")),
+        fs.remove(path.join(this.cwd, ".pnp.js")),
+        fs.remove(path.join(this.cwd, ".pnp.cjs")),
+      ]);
     } catch (e) {
       // Do nothing
     }

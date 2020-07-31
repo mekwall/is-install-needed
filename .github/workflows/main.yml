@@ -1,0 +1,32 @@
+name: CI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Install dependencies
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+      - name: Test
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: test --coverage
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1
+        with:
+          directory: ./coverage
+      - name: Lint and validate
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: validate
+      - name: Build
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build
+      - name: Release and publish
+        uses: cycjimmy/semantic-release-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

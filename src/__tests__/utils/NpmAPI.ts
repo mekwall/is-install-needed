@@ -9,7 +9,7 @@ interface Options {
   extraArgs?: string[];
 }
 
-export class PnpmAPI {
+export class NpmAPI {
   public proc: cp.ChildProcess | undefined = undefined;
   public stdout = new stream.PassThrough();
   public stderr = new stream.PassThrough();
@@ -17,7 +17,7 @@ export class PnpmAPI {
 
   private exec(cmd: string, options: Options) {
     if (this.proc) {
-      return Promise.reject(new Error("pnpm is already running"));
+      return Promise.reject(new Error("npm is already running"));
     }
     return new Promise((resolve, reject) => {
       let args = [cmd];
@@ -28,7 +28,7 @@ export class PnpmAPI {
         args = args.concat(options.extraArgs);
       }
       this.proc = cp.spawn(
-        os.platform() === "win32" ? "pnpm.cmd" : "pnpm",
+        os.platform() === "win32" ? "npm.cmd" : "npm",
         args,
         {
           cwd: this.cwd,
@@ -38,13 +38,13 @@ export class PnpmAPI {
       );
 
       let totalData = "";
-      this.proc.stdout.on("data", (data) => {
+      this.proc.stdout?.on("data", (data) => {
         totalData += data.toString();
         this.stdout.write(data);
       });
 
       let totalErr = "";
-      this.proc.stderr.on("data", (data) => {
+      this.proc.stderr?.on("data", (data) => {
         totalErr += data;
         this.stderr.write(data);
       });
@@ -82,7 +82,7 @@ export class PnpmAPI {
 
   public async rmlockfile() {
     try {
-      await fs.remove(path.join(this.cwd, "shrinkwrap.yaml"));
+      await fs.remove(path.join(this.cwd, "package-lock.json"));
     } catch (e) {
       // Do nothing
     }

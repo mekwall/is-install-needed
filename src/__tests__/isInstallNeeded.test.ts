@@ -1,21 +1,20 @@
 import fs from "fs-extra";
-import { isInstallNeeded } from "../src";
-import { writeCheckFile } from "../src/writeCheckFile";
+import { isInstallNeeded } from "../";
+import { writeCheckFile } from "../writeCheckFile";
 import { TEST_PACKAGE_DIR, YARN_LOCK_FILE, CHECK_FILE } from "./constants";
 import { YarnAPI } from "./utils/YarnAPI";
 
 const yarn = new YarnAPI(TEST_PACKAGE_DIR);
 
 describe("isInstallNeeded", () => {
-  beforeAll(async (done) => {
+  beforeAll(async () => {
     await yarn.install();
-    done();
   });
 
-  afterAll(async (done) => {
+  afterAll(async () => {
     await yarn.rmlockfile();
     await yarn.rmmods();
-    done();
+    await fs.remove(CHECK_FILE);
   });
 
   it("should say needed and create a check file", async () => {
@@ -42,8 +41,8 @@ describe("isInstallNeeded", () => {
       await yarn.remove(["smallest"]);
       expect(result).toBe(true);
       done();
-    }, 1000);
-  });
+    }, 100);
+  }, 30000);
 
   it("should say needed because node_modules doesn't exist", async () => {
     expect.assertions(1);

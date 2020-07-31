@@ -17,15 +17,17 @@ export async function isInstallNeeded(
     throw Error("Lock file not found");
   }
   const dir = path.dirname(lockfile);
+
+  const isYarn = await fs.pathExists(path.join(dir, ".yarn"));
   const nodeModulesExist = await fs.pathExists(path.join(dir, "node_modules"));
-  if (!nodeModulesExist) {
+  if (!isYarn && !nodeModulesExist) {
     needed = true;
   } else if (!(await fs.pathExists(checkfile))) {
     needed = true;
     writeCheckFile(lockfile, checkfile);
   } else {
     const prevHash = fs.readFileSync(checkfile).toString();
-    const currentHash = await fileHash(lockfile);
+    const currentHash = fileHash(lockfile);
     if (prevHash !== currentHash) {
       needed = true;
     }

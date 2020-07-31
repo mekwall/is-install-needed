@@ -4,55 +4,51 @@
   "version": "2.0.0",
   "author": "Marcus Ekwall <marcus.ekwall@gmail.com>",
   "license": "ISC",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "bin": {
-    "is-install-needed": "./lib/cli.js"
+  "main": "./src/index.ts",
+  "bin": "./src/cli.ts",
+  "publishConfig": {
+    "main": "./dist/index.js",
+    "bin": "./dist/cli.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/mekwall/is-install-needed.git"
   },
-  "dependencies": {
-    "fs-extra": "^7.0.0",
-    "yargs": "^12.0.2"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^5.0.4",
-    "@types/jest": "^23.3.5",
-    "@types/yargs": "^12.0.1",
-    "codecov": "^3.1.0",
-    "jest": "^23.6.0",
-    "jest-junit": "^5.2.0",
-    "prettier": "^1.14.3",
-    "semantic-release": "^15.10.3",
-    "ts-jest": "^23.10.4",
-    "tslint": "^5.11.0",
-    "typescript": "^3.1.3",
-    "yarn-api": "^1.1.0"
-  },
   "scripts": {
-    "build": "tsc --skipLibCheck --declaration -p tsconfig.build.json",
-    "test": "jest --runInBand --coverage",
-    "codecov": "codecov",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "jest --runInBand",
+    "lint": "eslint",
+    "validate": "yarn lint && tsc --skipLibCheck --noEmit -p tsconfig.json",
     "release": "semantic-release"
   },
-  "jest": {
-    "reporters": [
-      "default",
-      "jest-junit"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "js"
-    ],
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    },
-    "testRegex": "(/tests/.*\\.test\\.ts)",
-    "collectCoverageFrom": [
-      "src/**/*",
-      "!**/node_modules/**"
-    ]
+  "dependencies": {
+    "fs-extra": "^9.0.1",
+    "yargs": "^15.4.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-typescript": "^7.10.4",
+    "@babel/types": "^7.11.0",
+    "@types/babel__core": "^7",
+    "@types/babel__preset-env": "^7",
+    "@types/eslint": "^7",
+    "@types/fs-extra": "^9.0.1",
+    "@types/jest": "^26.0.7",
+    "@types/node": "^14.0.27",
+    "@types/yargs": "^15.0.5",
+    "@typescript-eslint/parser": "^3.7.1",
+    "@yarnpkg/pnpify": "^2.1.0",
+    "codecov": "^3.1.0",
+    "eslint": "^7.5.0",
+    "jest": "^26.2.1",
+    "jest-junit": "^11.1.0",
+    "prettier": "^2.0.5",
+    "semantic-release": "^17.1.1",
+    "ts-jest": "^26.1.4",
+    "tslib": "^2.0.0",
+    "typescript": "^3.9.7",
+    "typescript-eslint": "^0.0.1-alpha.0",
+    "yarn-api": "^1.1.0"
   }
 }

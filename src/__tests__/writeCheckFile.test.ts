@@ -1,21 +1,19 @@
 import fs from "fs-extra";
-import { writeCheckFile } from "../src/writeCheckFile";
+import { writeCheckFile } from "../writeCheckFile";
 import { CHECK_FILE, YARN_LOCK_FILE, TEST_PACKAGE_DIR } from "./constants";
-import { YarnAPI } from "../tests/utils/YarnAPI";
+import { YarnAPI } from "./utils/YarnAPI";
 
 const yarn = new YarnAPI(TEST_PACKAGE_DIR);
 
 describe("writeCheckFile", () => {
-  beforeAll(async (done) => {
+  beforeAll(async () => {
     await yarn.install();
-    done();
   });
 
-  afterAll(async (done) => {
+  afterAll(async () => {
     await yarn.rmlockfile();
     await yarn.rmmods();
-    fs.removeSync(CHECK_FILE);
-    done();
+    await fs.remove(CHECK_FILE);
   });
 
   it("should write check file", async () => {
@@ -23,7 +21,7 @@ describe("writeCheckFile", () => {
     await fs.remove(CHECK_FILE);
     const result = await writeCheckFile(YARN_LOCK_FILE, CHECK_FILE);
     expect(result).toBe(true);
-    expect(await fs.pathExists(CHECK_FILE)).toBe(true);
+    expect(fs.existsSync(CHECK_FILE)).toBe(true);
   });
 
   it("should fail to write check file", async () => {

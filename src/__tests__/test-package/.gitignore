@@ -1,4 +1,8 @@
 node_modules
 .lockhash
+.yarn
+.pnp.js
+.pnp.cjs
 yarn.lock
+pnpm-lock.yaml
 package-lock.json

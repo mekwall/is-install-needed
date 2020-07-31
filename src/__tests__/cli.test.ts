@@ -11,20 +11,20 @@ import {
 } from "./constants";
 import { NpmAPI } from "./utils/NpmAPI";
 import { PnpmAPI } from "./utils/PnpmAPI";
-import { run } from "../src/cliFunctions";
-import { writeCheckFile } from "../src/writeCheckFile";
+import { run } from "../cliFunctions";
+import { writeCheckFile } from "../writeCheckFile";
 
 const yarn = new YarnAPI(TEST_PACKAGE_DIR);
 const npm = new NpmAPI(TEST_PACKAGE_DIR);
 const pnpm = new PnpmAPI(TEST_PACKAGE_DIR);
 
 describe("cli", () => {
-  beforeAll(() => {
-    fs.removeSync(CHECK_FILE);
+  beforeAll(async () => {
+    await fs.remove(CHECK_FILE);
   });
 
-  afterAll(() => {
-    fs.removeSync(CHECK_FILE);
+  afterAll(async () => {
+    await fs.remove(CHECK_FILE);
   });
 
   it("should automatically detect yarn.lock", async () => {
@@ -45,7 +45,7 @@ describe("cli", () => {
     expect(result.msg).toBe("Install is not needed");
   });
 
-  it("should automatically detect shrinkwrap.yaml", async () => {
+  it("should automatically detect pnpm-lock.yaml", async () => {
     await pnpm.install();
     await writeCheckFile(PNPM_LOCK_FILE, CHECK_FILE);
     const result = await run(["--cwd", TEST_PACKAGE_DIR]);
@@ -57,10 +57,10 @@ describe("cli", () => {
   it("should fail to detect yarn.lock", async (done) => {
     const TMP_DIR = path.join(os.tmpdir(), "test-package");
     await yarn.rmlockfile();
-    fs.moveSync(TEST_PACKAGE_DIR, TMP_DIR);
+    await fs.move(TEST_PACKAGE_DIR, TMP_DIR);
     setTimeout(async () => {
       const result = await run(["--prefer=yarn", "--cwd", TMP_DIR]);
-      fs.moveSync(TMP_DIR, TEST_PACKAGE_DIR);
+      await fs.move(TMP_DIR, TEST_PACKAGE_DIR);
       expect(result.msg).toBe("Lock file not found");
       done();
     }, 1000);
@@ -69,22 +69,22 @@ describe("cli", () => {
   it("should fail to detect package-lock.json", async (done) => {
     const TMP_DIR = path.join(os.tmpdir(), "test-package");
     await npm.rmlockfile();
-    fs.moveSync(TEST_PACKAGE_DIR, TMP_DIR);
+    await fs.move(TEST_PACKAGE_DIR, TMP_DIR);
     setTimeout(async () => {
       const result = await run(["--prefer=npm", "--cwd", TMP_DIR]);
-      fs.moveSync(TMP_DIR, TEST_PACKAGE_DIR);
+      await fs.move(TMP_DIR, TEST_PACKAGE_DIR);
       expect(result.msg).toBe("Lock file not found");
       done();
     }, 1000);
   });
 
-  it("should fail to detect shrinkwrap.yaml", async (done) => {
+  it("should fail to detect pnpm-lock.yaml", async (done) => {
     const TMP_DIR = path.join(os.tmpdir(), "test-package");
     await npm.rmlockfile();
-    fs.moveSync(TEST_PACKAGE_DIR, TMP_DIR);
+    await fs.move(TEST_PACKAGE_DIR, TMP_DIR);
     setTimeout(async () => {
       const result = await run(["--prefer=pnpm", "--cwd", TMP_DIR]);
-      fs.moveSync(TMP_DIR, TEST_PACKAGE_DIR);
+      await fs.move(TMP_DIR, TEST_PACKAGE_DIR);
       expect(result.msg).toBe("Lock file not found");
       done();
     }, 1000);
