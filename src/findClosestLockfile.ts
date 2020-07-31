@@ -18,7 +18,7 @@ export async function findClosestLockfile(
 ) {
   const yarnLockfile = path.join(cwd, "yarn.lock");
   const npmLockfile = path.join(cwd, "package-lock.json");
-  const pnpmLockfile = path.join(cwd, "shrinkwrap.yaml");
+  const pnpmLockfile = path.join(cwd, "pnpm-lock.yaml");
 
   switch (prefer) {
     case "yarn":

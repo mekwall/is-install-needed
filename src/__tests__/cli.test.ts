@@ -80,7 +80,7 @@ describe("cli", () => {
 
   it("should fail to detect pnpm-lock.yaml", async (done) => {
     const TMP_DIR = path.join(os.tmpdir(), "test-package");
-    await npm.rmlockfile();
+    await pnpm.rmlockfile();
     await fs.move(TEST_PACKAGE_DIR, TMP_DIR);
     setTimeout(async () => {
       const result = await run(["--prefer=pnpm", "--cwd", TMP_DIR]);

@@ -21,7 +21,7 @@ Add `is-install-needed --postinstall` to your postscript to automatically write 
 $ is-install-needed
 ```
 
-It will automatically look for yarn.lock, package-lock.json and shrinkwrap.yaml when no preferred package manager is provided.
+It will automatically look for yarn.lock, package-lock.json and pnpm-lock.yaml when no preferred package manager is provided.
 
 | Flag            | Available options | Description               |
 | --------------- | ----------------- | ------------------------- |
@@ -34,12 +34,12 @@ It will automatically look for yarn.lock, package-lock.json and shrinkwrap.yaml 
 #### Check if install is needed
 
 ```javascript
-import { isInstallNeeded } from 'is-install-needed';
+import { isInstallNeeded } from "is-install-needed";
 
 async () => {
   const isNeeded = await isInstallNeeded();
   if (result) {
-    console.error('You need to run install');
+    console.error("You need to run install");
     process.exit(1);
   }
 };
@@ -48,7 +48,7 @@ async () => {
 #### Find closest lock file
 
 ```javascript
-import { findClosestLockfile } from 'is-install-needed';
+import { findClosestLockfile } from "is-install-needed";
 
 async () => {
   const lockfile = await findClosestLockfile();
