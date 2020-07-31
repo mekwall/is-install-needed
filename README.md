@@ -1,9 +1,12 @@
 # is-install-needed
 
-[![GitHub license](https://img.shields.io/badge/license-ISC-blue.svg?style=flat-square)](https://github.com/mekwall/is-install-needed/blob/master/LICENSE)
-[![Build Status](https://img.shields.io/circleci/project/github/mekwall/is-install-needed.svg?style=flat-square)](https://circleci.com/gh/mekwall/is-install-needed)
-[![Coverage](https://img.shields.io/codecov/c/github/mekwall/is-install-needed/master.svg?style=flat-square)](https://codecov.io/github/mekwall/is-install-needed?branch=master)
-[![Dependencies](https://img.shields.io/librariesio/github/mekwall/is-install-needed.svg?style=flat-square)](https://github.com/mekwall/is-install-needed)
+[![license](https://img.shields.io/badge/license-ISC-blue.svg?style=flat-square)](https://github.com/mekwall/is-install-needed/blob/master/LICENSE)
+[![npm](https://img.shields.io/npm/v/is-install-needed.svg?style=flat-square&logo=npm)](https://www.npmjs.com/package/is-install-needed)
+[![dependencies](https://img.shields.io/librariesio/github/mekwall/is-install-needed.svg?style=flat-square)](https://github.com/mekwall/is-install-needed)
+![types](https://img.shields.io/npm/types/is-install-needed.svg?style=flat-square&logo=typescript)
+[![build](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fmekwall%2Fis-install-needed%2Fbadge%3Fref%3Dmaster&label=build&style=flat-square)](https://actions-badge.atrox.dev/mekwall/is-install-needed/goto?ref=master)
+[![coverage](https://img.shields.io/codecov/c/github/mekwall/is-install-needed?style=flat-square)](https://codecov.io/github/mekwall/is-install-needed?branch=master)
+[![quality](https://img.shields.io/lgtm/grade/javascript/github/mekwall/is-install-needed?style=flat-square])](https://lgtm.com/projects/g/mekwall/is-install-needed/?mode=list)
 
 A simple devtool that tells you if you need to run install or not. It does so by checking if the lock file of your preferred package manager has changed. Supports the most popular package managers out there: [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/) (v1 and v2) and [pnpm](https://pnpm.js.org/).
 
