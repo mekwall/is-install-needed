@@ -18,16 +18,24 @@ export async function isInstallNeeded(
   }
   const dir = path.dirname(lockfile);
 
-  const isYarn = await fs.pathExists(path.join(dir, ".yarn"));
-  const nodeModulesExist = await fs.pathExists(path.join(dir, "node_modules"));
+  const [checkFileExists, isYarn, nodeModulesExist] = await Promise.all(
+    [
+      checkfile,
+      path.join(dir, ".yarn"),
+      path.join(dir, "node_modules"),
+    ].map((p) => fs.pathExists(p)),
+  );
+
   if (!isYarn && !nodeModulesExist) {
     needed = true;
-  } else if (!(await fs.pathExists(checkfile))) {
+  } else if (!checkFileExists) {
     needed = true;
-    writeCheckFile(lockfile, checkfile);
+    await writeCheckFile(lockfile, checkfile);
   } else {
-    const prevHash = fs.readFileSync(checkfile).toString();
-    const currentHash = fileHash(lockfile);
+    const [prevHash, currentHash] = await Promise.all([
+      fs.readFile(checkfile),
+      fileHash(lockfile),
+    ]).then((v) => v.map((v) => v.toString()));
     if (prevHash !== currentHash) {
       needed = true;
     }

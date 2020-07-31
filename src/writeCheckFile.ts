@@ -13,8 +13,8 @@ export async function writeCheckFile(
     throw new Error("Lock file not found");
   }
   try {
-    const sha = fileHash(lockfile);
-    fs.writeFileSync(checkfile, sha);
+    const sha = await fileHash(lockfile);
+    await fs.writeFile(checkfile, sha);
     return true;
   } catch (e) {
     return false;
