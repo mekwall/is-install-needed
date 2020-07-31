@@ -3,7 +3,6 @@ import os from "os";
 import stream from "stream";
 import fs from "fs-extra";
 import path from "path";
-import { YARN_LOCK_FILE } from "../constants";
 
 interface Options {
   pkgs?: string[];
@@ -62,8 +61,10 @@ export class YarnAPI {
   }
 
   public install(extraArgs?: string[]) {
-    if (!fs.existsSync(YARN_LOCK_FILE)) {
-      fs.writeFileSync(YARN_LOCK_FILE, "");
+    // If lock file does't exist, create an empty one
+    const lockFile = path.join(this.cwd, "yarn.lock");
+    if (!fs.existsSync(lockFile)) {
+      fs.writeFileSync(lockFile, "");
     }
     return this.exec("install", {
       extraArgs,

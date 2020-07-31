@@ -1,102 +1,82 @@
-import os from "os";
 import path from "path";
 import fs from "fs-extra";
-import { YarnAPI } from "./utils/YarnAPI";
-import {
-  TEST_PACKAGE_DIR,
-  CHECK_FILE,
-  YARN_LOCK_FILE,
-  NPM_LOCK_FILE,
-  PNPM_LOCK_FILE,
-} from "./constants";
-import { NpmAPI } from "./utils/NpmAPI";
-import { PnpmAPI } from "./utils/PnpmAPI";
 import { run } from "../cliFunctions";
 import { writeCheckFile } from "../writeCheckFile";
-
-const yarn = new YarnAPI(TEST_PACKAGE_DIR);
-const npm = new NpmAPI(TEST_PACKAGE_DIR);
-const pnpm = new PnpmAPI(TEST_PACKAGE_DIR);
+import { NpmAPI, PnpmAPI, YarnAPI, createTmpPackage } from "./utils";
 
 describe("cli", () => {
-  beforeAll(async () => {
-    await fs.remove(CHECK_FILE);
-  });
-
-  afterAll(async () => {
-    await fs.remove(CHECK_FILE);
-  });
-
   it("should automatically detect yarn.lock", async () => {
+    const tmpPackage = await createTmpPackage();
+    const yarn = new YarnAPI(tmpPackage);
+    const lockFile = path.join(tmpPackage, "yarn.lock");
+    const checkFile = path.join(tmpPackage, ".lockhash");
     await yarn.install();
-    await writeCheckFile(YARN_LOCK_FILE, CHECK_FILE);
-    const result = await run(["--cwd", TEST_PACKAGE_DIR]);
-    await yarn.rmlockfile();
-    await yarn.rmmods();
+    await writeCheckFile(lockFile, checkFile);
+    const result = await run(["--cwd", tmpPackage]);
     expect(result.msg).toBe("Install is not needed");
+    await fs.remove(tmpPackage);
   });
 
   it("should automatically detect package-lock.json", async () => {
+    const tmpPackage = await createTmpPackage();
+    const npm = new NpmAPI(tmpPackage);
+    const lockFile = path.join(tmpPackage, "package-lock.json");
+    const checkFile = path.join(tmpPackage, ".lockhash");
     await npm.install();
-    await writeCheckFile(NPM_LOCK_FILE, CHECK_FILE);
-    const result = await run(["--cwd", TEST_PACKAGE_DIR]);
+    await writeCheckFile(lockFile, checkFile);
+    const result = await run(["--cwd", tmpPackage]);
     await npm.rmlockfile();
     await npm.rmmods();
     expect(result.msg).toBe("Install is not needed");
+    await fs.remove(tmpPackage);
   });
 
   it("should automatically detect pnpm-lock.yaml", async () => {
+    const tmpPackage = await createTmpPackage();
+    const pnpm = new PnpmAPI(tmpPackage);
+    const lockFile = path.join(tmpPackage, "pnpm-lock.yaml");
+    const checkFile = path.join(tmpPackage, ".lockhash");
     await pnpm.install();
-    await writeCheckFile(PNPM_LOCK_FILE, CHECK_FILE);
-    const result = await run(["--cwd", TEST_PACKAGE_DIR]);
-    await pnpm.rmlockfile();
-    await pnpm.rmmods();
+    await writeCheckFile(lockFile, checkFile);
+    const result = await run(["--cwd", tmpPackage]);
     expect(result.msg).toBe("Install is not needed");
+    await fs.remove(tmpPackage);
   });
 
-  it("should fail to detect yarn.lock", async (done) => {
-    const TMP_DIR = path.join(os.tmpdir(), "test-package");
+  it("should fail to detect yarn.lock", async () => {
+    const tmpPackage = await createTmpPackage();
+    const yarn = new YarnAPI(tmpPackage);
     await yarn.rmlockfile();
-    await fs.move(TEST_PACKAGE_DIR, TMP_DIR);
-    setTimeout(async () => {
-      const result = await run(["--prefer=yarn", "--cwd", TMP_DIR]);
-      await fs.move(TMP_DIR, TEST_PACKAGE_DIR);
-      expect(result.msg).toBe("Lock file not found");
-      done();
-    }, 1000);
+    const result = await run(["--prefer=yarn", "--cwd", tmpPackage]);
+    expect(result.msg).toBe("Lock file not found");
+    await fs.remove(tmpPackage);
   });
 
-  it("should fail to detect package-lock.json", async (done) => {
-    const TMP_DIR = path.join(os.tmpdir(), "test-package");
+  it("should fail to detect package-lock.json", async () => {
+    const tmpPackage = await createTmpPackage();
+    const npm = new NpmAPI(tmpPackage);
     await npm.rmlockfile();
-    await fs.move(TEST_PACKAGE_DIR, TMP_DIR);
-    setTimeout(async () => {
-      const result = await run(["--prefer=npm", "--cwd", TMP_DIR]);
-      await fs.move(TMP_DIR, TEST_PACKAGE_DIR);
-      expect(result.msg).toBe("Lock file not found");
-      done();
-    }, 1000);
+    const result = await run(["--prefer=npm", "--cwd", tmpPackage]);
+    expect(result.msg).toBe("Lock file not found");
+    await fs.remove(tmpPackage);
   });
 
-  it("should fail to detect pnpm-lock.yaml", async (done) => {
-    const TMP_DIR = path.join(os.tmpdir(), "test-package");
+  it("should fail to detect pnpm-lock.yaml", async () => {
+    const tmpPackage = await createTmpPackage();
+    const pnpm = new PnpmAPI(tmpPackage);
     await pnpm.rmlockfile();
-    await fs.move(TEST_PACKAGE_DIR, TMP_DIR);
-    setTimeout(async () => {
-      const result = await run(["--prefer=pnpm", "--cwd", TMP_DIR]);
-      await fs.move(TMP_DIR, TEST_PACKAGE_DIR);
-      expect(result.msg).toBe("Lock file not found");
-      done();
-    }, 1000);
+    const result = await run(["--prefer=pnpm", "--cwd", tmpPackage]);
+    expect(result.msg).toBe("Lock file not found");
+    await fs.remove(tmpPackage);
   });
 
-  it("should write check file on postinstall", async (done) => {
+  it("should write check file on postinstall", async () => {
+    const tmpPackage = await createTmpPackage();
+    const checkFile = path.join(tmpPackage, ".lockhash");
+    const yarn = new YarnAPI(tmpPackage);
     await yarn.install();
-    fs.removeSync(CHECK_FILE);
-    await run(["--postinstall", "--cwd", TEST_PACKAGE_DIR]);
-    expect(fs.existsSync(CHECK_FILE)).toBe(true);
-    await yarn.rmlockfile();
-    await yarn.rmmods();
-    done();
+    await run(["--postinstall", "--cwd", tmpPackage]);
+    expect(fs.existsSync(checkFile)).toBe(true);
+    await fs.remove(tmpPackage);
   });
 });

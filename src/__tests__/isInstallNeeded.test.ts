@@ -1,53 +1,74 @@
 import fs from "fs-extra";
+import path from "path";
 import { isInstallNeeded } from "../";
 import { writeCheckFile } from "../writeCheckFile";
-import { TEST_PACKAGE_DIR, YARN_LOCK_FILE, CHECK_FILE } from "./constants";
-import { YarnAPI } from "./utils/YarnAPI";
-
-const yarn = new YarnAPI(TEST_PACKAGE_DIR);
+import { YarnAPI, createTmpPackage, NpmAPI } from "./utils";
+import { NOMEM } from "dns";
 
 describe("isInstallNeeded", () => {
-  beforeAll(async () => {
-    await yarn.install();
-  });
-
-  afterAll(async () => {
-    await yarn.rmlockfile();
-    await yarn.rmmods();
-    await fs.remove(CHECK_FILE);
-  });
-
   it("should say needed and create a check file", async () => {
     expect.assertions(2);
-    await fs.remove(CHECK_FILE);
-    const result = await isInstallNeeded(YARN_LOCK_FILE, CHECK_FILE);
+    const tmpPackage = await createTmpPackage();
+    const yarn = new YarnAPI(tmpPackage);
+    const lockFile = path.join(tmpPackage, "yarn.lock");
+    const checkFile = path.join(tmpPackage, ".lockhash");
+    await yarn.install();
+    const result = await isInstallNeeded(lockFile, checkFile);
     expect(result).toBe(true);
-    expect(await fs.pathExists(CHECK_FILE)).toBe(true);
+    expect(await fs.pathExists(checkFile)).toBe(true);
+    await fs.remove(tmpPackage);
   });
 
   it("should say it's not needed when check file exist and have the same hash", async () => {
     expect.assertions(1);
-    await writeCheckFile(YARN_LOCK_FILE, CHECK_FILE);
-    const result = await isInstallNeeded(YARN_LOCK_FILE, CHECK_FILE);
+    const tmpPackage = await createTmpPackage();
+    const yarn = new YarnAPI(tmpPackage);
+    const lockFile = path.join(tmpPackage, "yarn.lock");
+    const checkFile = path.join(tmpPackage, ".lockhash");
+    await yarn.install();
+    await writeCheckFile(lockFile, checkFile);
+    const result = await isInstallNeeded(lockFile, checkFile);
     expect(result).toBe(false);
+    await fs.remove(tmpPackage);
   });
 
-  it("should say it's needed when lock file has changed", async (done) => {
+  it("should say it's needed when lock file has changed", async () => {
     expect.assertions(1);
-    await writeCheckFile(YARN_LOCK_FILE, CHECK_FILE);
+    const tmpPackage = await createTmpPackage();
+    const yarn = new YarnAPI(tmpPackage);
+    const lockFile = path.join(tmpPackage, "yarn.lock");
+    const checkFile = path.join(tmpPackage, ".lockhash");
+    await writeCheckFile(lockFile, checkFile);
     await yarn.add(["smallest"]);
-    setTimeout(async () => {
-      const result = await isInstallNeeded(YARN_LOCK_FILE, CHECK_FILE);
-      await yarn.remove(["smallest"]);
-      expect(result).toBe(true);
-      done();
-    }, 100);
-  }, 30000);
+    const result = await isInstallNeeded(lockFile, checkFile);
+    await yarn.remove(["smallest"]);
+    expect(result).toBe(true);
+    await fs.remove(tmpPackage);
+  });
+
+  it("should say needed because .yarn doesn't exist", async () => {
+    expect.assertions(1);
+    const tmpPackage = await createTmpPackage();
+    const yarn = new YarnAPI(tmpPackage);
+    const lockFile = path.join(tmpPackage, "yarn.lock");
+    const checkFile = path.join(tmpPackage, ".lockhash");
+    await yarn.install();
+    await yarn.rmmods();
+    const result = await isInstallNeeded(lockFile, checkFile);
+    expect(result).toBe(true);
+    await fs.remove(tmpPackage);
+  });
 
   it("should say needed because node_modules doesn't exist", async () => {
     expect.assertions(1);
-    await yarn.rmmods();
-    const result = await isInstallNeeded(YARN_LOCK_FILE, CHECK_FILE);
+    const tmpPackage = await createTmpPackage();
+    const npm = new NpmAPI(tmpPackage);
+    const lockFile = path.join(tmpPackage, "package-lock.json");
+    const checkFile = path.join(tmpPackage, ".lockhash");
+    await npm.install();
+    await npm.rmmods();
+    const result = await isInstallNeeded(lockFile, checkFile);
     expect(result).toBe(true);
+    await fs.remove(tmpPackage);
   });
 });

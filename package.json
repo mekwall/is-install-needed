@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "test": "jest --runInBand",
+    "test": "jest",
     "lint": "eslint",
     "validate": "yarn lint && tsc --skipLibCheck --noEmit -p tsconfig.json",
     "release": "semantic-release"

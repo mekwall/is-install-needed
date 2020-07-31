@@ -1,7 +1,0 @@
-{
-  "name": "test-package",
-  "private": true,
-  "dependencies": {
-    "left-pad": "*"
-  }
-}
