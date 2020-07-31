@@ -1,5 +1,5 @@
-import * as path from 'path';
-import { findClosestFile } from './findClosestFile';
+import path from "path";
+import { findClosestFile } from "./findClosestFile";
 
 function filterResult(paths: Array<string | undefined>) {
   return paths.sort((a, b) => {
@@ -14,18 +14,18 @@ function filterResult(paths: Array<string | undefined>) {
 
 export async function findClosestLockfile(
   cwd = process.cwd(),
-  prefer?: string
+  prefer?: string,
 ) {
-  const yarnLockfile = path.join(cwd, 'yarn.lock');
-  const npmLockfile = path.join(cwd, 'package-lock.json');
-  const pnpmLockfile = path.join(cwd, 'shrinkwrap.yaml');
+  const yarnLockfile = path.join(cwd, "yarn.lock");
+  const npmLockfile = path.join(cwd, "package-lock.json");
+  const pnpmLockfile = path.join(cwd, "shrinkwrap.yaml");
 
   switch (prefer) {
-    case 'yarn':
+    case "yarn":
       return findClosestFile(path.basename(yarnLockfile), cwd);
-    case 'npm':
+    case "npm":
       return findClosestFile(path.basename(npmLockfile), cwd);
-    case 'pnpm':
+    case "pnpm":
       return findClosestFile(path.basename(pnpmLockfile), cwd);
   }
 

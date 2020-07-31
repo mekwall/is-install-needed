@@ -1,16 +1,16 @@
-import * as fs from 'fs-extra';
-import { fileHash } from './fileHash';
-import { findClosestLockfile } from './findClosestLockfile';
+import fs from "fs-extra";
+import { fileHash } from "./fileHash";
+import { findClosestLockfile } from "./findClosestLockfile";
 
 export async function writeCheckFile(
   lockfile?: string,
-  checkfile = '.lockhash'
+  checkfile = ".lockhash",
 ) {
   if (!lockfile) {
     lockfile = await findClosestLockfile();
   }
   if (!lockfile) {
-    throw new Error('Lock file not found');
+    throw new Error("Lock file not found");
   }
   try {
     const sha = await fileHash(lockfile);

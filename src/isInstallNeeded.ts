@@ -1,23 +1,23 @@
-import * as fs from 'fs-extra';
-import * as path from 'path';
-import { fileHash } from './fileHash';
-import { writeCheckFile } from './writeCheckFile';
-import { findClosestLockfile } from './findClosestLockfile';
+import fs from "fs-extra";
+import path from "path";
+import { fileHash } from "./fileHash";
+import { writeCheckFile } from "./writeCheckFile";
+import { findClosestLockfile } from "./findClosestLockfile";
 
 export async function isInstallNeeded(
   lockfile?: string,
-  checkfile = '.lockhash',
-  cb?: (isNeeded: boolean) => void
+  checkfile = ".lockhash",
+  cb?: (isNeeded: boolean) => void,
 ) {
   let needed = false;
   if (!lockfile) {
     lockfile = await findClosestLockfile(process.cwd());
   }
   if (!lockfile) {
-    throw Error('Lock file not found');
+    throw Error("Lock file not found");
   }
   const dir = path.dirname(lockfile);
-  const nodeModulesExist = await fs.pathExists(path.join(dir, 'node_modules'));
+  const nodeModulesExist = await fs.pathExists(path.join(dir, "node_modules"));
   if (!nodeModulesExist) {
     needed = true;
   } else if (!(await fs.pathExists(checkfile))) {
@@ -30,7 +30,7 @@ export async function isInstallNeeded(
       needed = true;
     }
   }
-  if (typeof cb === 'function') {
+  if (typeof cb === "function") {
     cb(needed);
   }
   return needed;

@@ -1,12 +1,12 @@
-import * as fs from 'fs-extra';
-import { isInstallNeeded } from '../src';
-import { writeCheckFile } from '../src/writeCheckFile';
-import { TEST_PACKAGE_DIR, YARN_LOCK_FILE, CHECK_FILE } from './constants';
-import { YarnAPI } from './utils/YarnAPI';
+import fs from "fs-extra";
+import { isInstallNeeded } from "../src";
+import { writeCheckFile } from "../src/writeCheckFile";
+import { TEST_PACKAGE_DIR, YARN_LOCK_FILE, CHECK_FILE } from "./constants";
+import { YarnAPI } from "./utils/YarnAPI";
 
 const yarn = new YarnAPI(TEST_PACKAGE_DIR);
 
-describe('isInstallNeeded', () => {
+describe("isInstallNeeded", () => {
   beforeAll(async (done) => {
     await yarn.install();
     done();
@@ -18,7 +18,7 @@ describe('isInstallNeeded', () => {
     done();
   });
 
-  it('should say needed and create a check file', async () => {
+  it("should say needed and create a check file", async () => {
     expect.assertions(2);
     await fs.remove(CHECK_FILE);
     const result = await isInstallNeeded(YARN_LOCK_FILE, CHECK_FILE);
@@ -36,10 +36,10 @@ describe('isInstallNeeded', () => {
   it("should say it's needed when lock file has changed", async (done) => {
     expect.assertions(1);
     await writeCheckFile(YARN_LOCK_FILE, CHECK_FILE);
-    await yarn.add(['smallest']);
+    await yarn.add(["smallest"]);
     setTimeout(async () => {
       const result = await isInstallNeeded(YARN_LOCK_FILE, CHECK_FILE);
-      await yarn.remove(['smallest']);
+      await yarn.remove(["smallest"]);
       expect(result).toBe(true);
       done();
     }, 1000);

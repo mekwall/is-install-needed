@@ -1,8 +1,8 @@
-import * as cp from 'child_process';
-import * as os from 'os';
-import * as stream from 'stream';
-import * as fs from 'fs-extra';
-import * as path from 'path';
+import cp from "child_process";
+import os from "os";
+import stream from "stream";
+import fs from "fs-extra";
+import path from "path";
 
 interface Options {
   pkgs?: string[];
@@ -17,7 +17,7 @@ export class NpmAPI {
 
   private exec(cmd: string, options: Options) {
     if (this.proc) {
-      return Promise.reject(new Error('npm is already running'));
+      return Promise.reject(new Error("npm is already running"));
     }
     return new Promise((resolve, reject) => {
       let args = [cmd];
@@ -28,28 +28,28 @@ export class NpmAPI {
         args = args.concat(options.extraArgs);
       }
       this.proc = cp.spawn(
-        os.platform() === 'win32' ? 'npm.cmd' : 'npm',
+        os.platform() === "win32" ? "npm.cmd" : "npm",
         args,
         {
           cwd: this.cwd,
           env: this.env,
-          stdio: 'pipe',
-        }
+          stdio: "pipe",
+        },
       );
 
-      let totalData = '';
-      this.proc.stdout.on('data', (data) => {
+      let totalData = "";
+      this.proc.stdout.on("data", (data) => {
         totalData += data.toString();
         this.stdout.write(data);
       });
 
-      let totalErr = '';
-      this.proc.stderr.on('data', (data) => {
+      let totalErr = "";
+      this.proc.stderr.on("data", (data) => {
         totalErr += data;
         this.stderr.write(data);
       });
 
-      this.proc.on('close', (code) => {
+      this.proc.on("close", (code) => {
         if (code !== 0) {
           reject(totalErr);
         } else {
@@ -61,19 +61,19 @@ export class NpmAPI {
   }
 
   public install(pkgs?: string[], extraArgs?: string[]) {
-    return this.exec('install', {
+    return this.exec("install", {
       pkgs,
       extraArgs,
     });
   }
 
   public uninstall(pkgs: string[]) {
-    return this.exec('uninstall', { pkgs });
+    return this.exec("uninstall", { pkgs });
   }
 
   public async rmmods() {
     try {
-      await fs.remove(path.join(this.cwd, 'node_modules'));
+      await fs.remove(path.join(this.cwd, "node_modules"));
     } catch (e) {
       // Do nothing
     }
@@ -82,7 +82,7 @@ export class NpmAPI {
 
   public async rmlockfile() {
     try {
-      await fs.remove(path.join(this.cwd, 'package-lock.json'));
+      await fs.remove(path.join(this.cwd, "package-lock.json"));
     } catch (e) {
       // Do nothing
     }
