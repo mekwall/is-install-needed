@@ -2,6 +2,12 @@
   "name": "is-install-needed",
   "description": "Tool to check if runnning npm/yarn install is necessary",
   "version": "2.0.0",
+  "keywords": [
+    "devtool",
+    "npm",
+    "yarn",
+    "pnpm"
+  ],
   "author": "Marcus Ekwall <marcus.ekwall@gmail.com>",
   "license": "ISC",
   "main": "./src/index.ts",
