@@ -5,7 +5,7 @@
 [![Coverage](https://img.shields.io/codecov/c/github/mekwall/is-install-needed/master.svg?style=flat-square)](https://codecov.io/github/mekwall/is-install-needed?branch=master)
 [![Dependencies](https://img.shields.io/librariesio/github/mekwall/is-install-needed.svg?style=flat-square)](https://github.com/mekwall/is-install-needed)
 
-A simple devtool that tells you if you need to run install or not. It does so by checking if the lock file of your preferred package manager has changed. Supports the most popular package managers out there: [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/) and [pnpm](https://pnpm.js.org/).
+A simple devtool that tells you if you need to run install or not. It does so by checking if the lock file of your preferred package manager has changed. Supports the most popular package managers out there: [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/) (v1 and v2) and [pnpm](https://pnpm.js.org/).
 
 ## Installation
 
