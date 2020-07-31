@@ -14,9 +14,9 @@ describe("fileHash", () => {
     await yarn.rmmods();
   });
 
-  it("should throw exception when file doesn't exist", async () => {
+  it("should throw exception when file doesn't exist", () => {
     try {
-      await fileHash("/dev/null");
+      fileHash("/dev/null");
     } catch (e) {
       expect(e).toBeDefined();
     }
